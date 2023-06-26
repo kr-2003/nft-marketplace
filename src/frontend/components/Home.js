@@ -1,9 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
+import { useNavigate } from "react-router-dom";
+import { MyContext } from "./MyContext";
 
 const Home = ({ marketplace, nft }) => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
+  const { item, setItem } = useContext(MyContext);
   const loadMarketplaceItems = async () => {
     // Load all unsold items
     const itemCount = await marketplace.itemCount();
@@ -26,6 +30,8 @@ const Home = ({ marketplace, nft }) => {
           name: metadata.name,
           description: metadata.description,
           image: metadata.image,
+          address: item.nft,
+          sold: item.sold,
         });
       }
     }
@@ -38,6 +44,11 @@ const Home = ({ marketplace, nft }) => {
       await marketplace.purchaseItem(item.itemId, { value: item.totalPrice })
     ).wait();
     loadMarketplaceItems();
+  };
+
+  const detailsHandler = (item) => {
+    setItem(item);
+    navigate("/details");
   };
 
   useEffect(() => {
@@ -54,40 +65,45 @@ const Home = ({ marketplace, nft }) => {
       {items.length > 0 ? (
         <div className="px-5 py-3 container h-[100%]">
           <div className="grid grid-cols-4 rounded-lg gap-4 h-[60%]">
-
-              {items.map((item, idx) => (
-                <div key={idx} className="overflow-hidden rounded-lg h-100">
-                  <div className="bg-[#485bb1] h-100">
-                    <img
-                      className="h-[60%] object-cover"
-                      variant="top"
-                      src={item.image}
-                    />
-                    <div className="grid h-[40%] bg-[#131418] text-white p-2">
-                      <div className="text-xl font-bold text-left">
-                        {item.name}
-                      </div>
-                      <div className="text-left">#{item.itemId._hex}</div>
-                      <div className="grid grid-cols-2">
-                        <div className="text-left">
-                          <span className="text-sm text-[#64748b]">Price:</span>
-                          <div>
-                            {ethers.utils.formatEther(item.totalPrice)} ETH
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <button className="mt-3 text-white bg-blue-600 rounded-full items-center py-1 px-4 font-bold leading-normal transition duration-200 transform hover:scale-105 shadow">
-                            Buy
-                          </button>
+            {items.map((item, idx) => (
+              <div key={idx} className="overflow-hidden rounded-lg h-100">
+                <div
+                  className="bg-[#485bb1] h-100 cursor-pointer"
+                  onClick={() => detailsHandler(item)}
+                >
+                  <img
+                    className="h-[60%] object-cover"
+                    variant="top"
+                    src={item.image}
+                  />
+                  <div className="grid h-[40%] bg-[#131418] text-white p-2">
+                    <div className="text-xl font-bold text-left">
+                      {item.name}
+                    </div>
+                    <div className="text-left">#{item.itemId._hex}</div>
+                    <div className="grid grid-cols-2">
+                      <div className="text-left">
+                        <span className="text-sm text-[#64748b]">Price:</span>
+                        <div>
+                          {ethers.utils.formatEther(item.totalPrice)} ETH
                         </div>
                       </div>
-                      {/* <button className="text-white bg-blue-600 rounded-full items-center py-1 px-4 font-bold leading-normal transition duration-200 transform hover:scale-105 shadow">
+                      <div className="text-right">
+                        <button
+                          onClick={() => buyMarketItem(item)}
+                          className="mt-3 text-white bg-blue-600 rounded-full items-center py-1 px-4 font-bold leading-normal transition duration-200 transform hover:scale-105 shadow"
+                        >
+                          Buy
+                        </button>
+                      </div>
+                    </div>
+                    {/* <button className="text-white bg-blue-600 rounded-full items-center py-1 px-4 font-bold leading-normal transition duration-200 transform hover:scale-105 shadow">
                     Know More
                   </button> */}
-                    </div>
                   </div>
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
         </div>
       ) : (

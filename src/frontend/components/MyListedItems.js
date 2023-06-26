@@ -1,16 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
 import { Row, Col, Card } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { MyContext } from "./MyContext";
 
-function renderSoldItems(items) {
-  return (
-    <>
-      <h2 className="text-white">Sold</h2>
-      <div className="grid grid-cols-4 rounded-lg gap-4">
-        <div className="g-4 py-3 rounded-lg">
+export default function MyListedItems({ marketplace, nft, account }) {
+  const navigate = useNavigate();
+  const { setItem } = useContext(MyContext);
+  const [loading, setLoading] = useState(true);
+  const [listedItems, setListedItems] = useState([]);
+  const [soldItems, setSoldItems] = useState([]);
+  function renderSoldItems(items) {
+    const detailsHandler = (item) => {
+      setItem(item);
+      navigate("/details");
+    };
+
+    return (
+      <>
+        <h2 className="text-white">Sold</h2>
+        <div className="g-4 py-3 grid grid-cols-4 gap-4">
           {items.map((item, idx) => (
-            <div key={idx} className="overflow-hidden rounded-lg h-100">
-              <div className="bg-[#485bb1] h-100">
+            <div key={idx} className="overflow-hidden rounded-lg h-100 cursor-pointer">
+              <div
+                onClick={() => detailsHandler(item)}
+                className="bg-[#485bb1] h-100"
+              >
                 <img
                   className="h-[60%] object-cover"
                   variant="top"
@@ -29,23 +44,15 @@ function renderSoldItems(items) {
                       <div>{ethers.utils.formatEther(item.price)} ETH</div>
                     </div>
                   </div>
-                  {/* <button className="text-white bg-blue-600 rounded-full items-center py-1 px-4 font-bold leading-normal transition duration-200 transform hover:scale-105 shadow">
-                    Know More
-                  </button> */}
                 </div>
               </div>
             </div>
           ))}
         </div>
-      </div>
-    </>
-  );
-}
+      </>
+    );
+  }
 
-export default function MyListedItems({ marketplace, nft, account }) {
-  const [loading, setLoading] = useState(true);
-  const [listedItems, setListedItems] = useState([]);
-  const [soldItems, setSoldItems] = useState([]);
   const loadListedItems = async () => {
     // Load all sold items that the user listed
     const itemCount = await marketplace.itemCount();
@@ -70,6 +77,7 @@ export default function MyListedItems({ marketplace, nft, account }) {
           name: metadata.name,
           description: metadata.description,
           image: metadata.image,
+          sold: i.sold,
         };
         listedItems.push(item);
         // Add listed item to sold items array if sold
@@ -80,6 +88,11 @@ export default function MyListedItems({ marketplace, nft, account }) {
     setListedItems(listedItems);
     setSoldItems(soldItems);
   };
+  const detailsHandler = (item) => {
+    setItem(item);
+    navigate("/details");
+  };
+
   useEffect(() => {
     loadListedItems();
   }, []);
@@ -96,8 +109,11 @@ export default function MyListedItems({ marketplace, nft, account }) {
           <h2 className="text-white">Listed</h2>
           <div className="g-4 py-3 grid grid-cols-4 gap-4">
             {listedItems.map((item, idx) => (
-              <div key={idx} className="overflow-hidden rounded-lg h-100">
-                <div className="bg-[#485bb1] h-100">
+              <div key={idx} className="overflow-hidden rounded-lg h-100 cursor-pointer">
+                <div
+                  onClick={() => detailsHandler(item)}
+                  className="bg-[#485bb1] h-100"
+                >
                   <img
                     className="h-[60%] object-cover"
                     variant="top"
