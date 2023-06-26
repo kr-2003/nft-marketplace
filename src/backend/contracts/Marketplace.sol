@@ -62,7 +62,7 @@ contract Marketplace is ReentrancyGuard {
             _price,
             payable(msg.sender),
             false
-        );
+        ); 
 
         emit Offered(itemCount, address(_nft), _tokenId, _price, msg.sender);
     }
@@ -86,6 +86,20 @@ contract Marketplace is ReentrancyGuard {
             item.tokenId,
             item.price,
             item.seller,
+            msg.sender
+        );
+    }
+
+    function upForSale(uint _itemId) external nonReentrant {
+        Item storage item = items[_itemId];
+
+        item.sold = false;
+
+        emit Offered(
+            itemCount,
+            address(item.nft),
+            item.tokenId,
+            item.price,
             msg.sender
         );
     }

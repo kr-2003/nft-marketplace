@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
-    "hardhat": "^2.8.4"
+    "hardhat": "^2.8.4",
+    "tailwind": "^4.0.0"
   }
 }
