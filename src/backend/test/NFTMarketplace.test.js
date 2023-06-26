@@ -60,7 +60,7 @@ describe("NFTMarketplace", function () {
         marketplace.connect(addr1).makeItem(nft.address, 1, toWei(1))
       )
         .to.emit(marketplace, "Offered")
-        .withArgs(1, nft.address, 1, toWei(1), addr1.address);
+        .withArgs(1, nft.address, 1, toWei(1), addr1.address, (value) => value !== undefined);
 
       expect(await nft.ownerOf(1)).to.equal(marketplace.address);
 
@@ -106,7 +106,8 @@ describe("NFTMarketplace", function () {
           1,
           toWei(price),
           addr1.address,
-          addr2.address
+          addr2.address,
+          (value) => value !== undefined
         );
 
       const sellerFinalEthBal = await addr1.getBalance();

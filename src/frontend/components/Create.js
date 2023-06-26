@@ -63,7 +63,7 @@ const Create = ({ marketplace, nft }) => {
     await (await marketplace.makeItem(nft.address, id, listingPrice)).wait();
   };
   return (
-    <div className="container-fluid mt-5">
+    <div className="container-fluid mt-5 h-[100vh]">
       <div className="row">
         <main
           role="main"

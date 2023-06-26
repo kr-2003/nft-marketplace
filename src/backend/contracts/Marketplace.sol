@@ -25,7 +25,8 @@ contract Marketplace is ReentrancyGuard {
         address indexed nft,
         uint tokenId,
         uint price,
-        address indexed seller
+        address indexed seller,
+        uint256 time
     );
 
     event Bought(
@@ -34,7 +35,8 @@ contract Marketplace is ReentrancyGuard {
         uint tokenId,
         uint price,
         address indexed seller,
-        address indexed buyer
+        address indexed buyer,
+        uint256 time
     );
 
     mapping(uint => Item) public items;
@@ -62,9 +64,16 @@ contract Marketplace is ReentrancyGuard {
             _price,
             payable(msg.sender),
             false
-        ); 
+        );
 
-        emit Offered(itemCount, address(_nft), _tokenId, _price, msg.sender);
+        emit Offered(
+            itemCount,
+            address(_nft),
+            _tokenId,
+            _price,
+            msg.sender,
+            block.timestamp
+        );
     }
 
     function purchaseItem(uint _itemId) external payable nonReentrant {
@@ -86,7 +95,8 @@ contract Marketplace is ReentrancyGuard {
             item.tokenId,
             item.price,
             item.seller,
-            msg.sender
+            msg.sender,
+            block.timestamp
         );
     }
 
@@ -100,7 +110,8 @@ contract Marketplace is ReentrancyGuard {
             address(item.nft),
             item.tokenId,
             item.price,
-            msg.sender
+            msg.sender,
+            block.timestamp
         );
     }
 

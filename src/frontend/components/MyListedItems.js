@@ -27,7 +27,7 @@ export default function MyListedItems({ marketplace, nft, account }) {
                 className="bg-[#485bb1] h-100"
               >
                 <img
-                  className="h-[60%] object-cover"
+                  className="h-[60%] object-cover w-100"
                   variant="top"
                   src={item.image}
                 />
@@ -115,7 +115,7 @@ export default function MyListedItems({ marketplace, nft, account }) {
                   className="bg-[#485bb1] h-100"
                 >
                   <img
-                    className="h-[60%] object-cover"
+                    className="h-[60%] object-cover w-100"
                     variant="top"
                     src={item.image}
                   />

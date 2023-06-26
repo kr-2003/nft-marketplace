@@ -63,8 +63,9 @@ const Home = ({ marketplace, nft }) => {
   return (
     <div className="flex justify-center h-[100vh]">
       {items.length > 0 ? (
-        <div className="px-5 py-3 container h-[100%]">
-          <div className="grid grid-cols-4 rounded-lg gap-4 h-[60%]">
+        <div className="px-5 py-3 container">
+          {/* <h2 className="text-white">Listed</h2> */}
+          <div className="g-4 py-3 grid grid-cols-4 gap-4">
             {items.map((item, idx) => (
               <div key={idx} className="overflow-hidden rounded-lg h-100">
                 <div
@@ -72,7 +73,7 @@ const Home = ({ marketplace, nft }) => {
                   onClick={() => detailsHandler(item)}
                 >
                   <img
-                    className="h-[60%] object-cover"
+                    className="h-[60%] object-cover w-100"
                     variant="top"
                     src={item.image}
                   />
