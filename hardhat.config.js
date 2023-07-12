@@ -11,7 +11,7 @@ module.exports = {
     tests: "./src/backend/test",
   },
   networks: {
-    mumbai: {
+    sepolia: {
       url: API_URL,
       accounts: [`0x${PRIVATE_KEY}`],
     },
